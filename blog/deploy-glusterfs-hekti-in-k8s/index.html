@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8">
+<title>kubernetes 集群中部署 glusterfs 与 heketi - 陈sir 的流水帐</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+  <meta name="generator" content="Hugo 0.58.1" />
+  <meta itemprop="name" content="kubernetes 集群中部署 glusterfs 与 heketi">
+<meta itemprop="description" content="deploy glusterfs and heketi in kubernetes">
+
+
+
+<meta itemprop="wordCount" content="592">
+
+
+
+<meta itemprop="keywords" content="kubernetes," />
+
+  <meta property="og:title" content="kubernetes 集群中部署 glusterfs 与 heketi" />
+<meta property="og:description" content="deploy glusterfs and heketi in kubernetes" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/blog/deploy-glusterfs-hekti-in-k8s/" />
+<meta property="og:site_name" content="陈sir 的流水帐" />
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="kubernetes 集群中部署 glusterfs 与 heketi"/>
+<meta name="twitter:description" content="deploy glusterfs and heketi in kubernetes"/>
+<meta name="twitter:site" content="@example"/>
+
+  
+
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+  
+    
+      <link rel="stylesheet" href="/css/normalize.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
+      
+      
+      <link rel="stylesheet" href="/css/main.min.df53c1edadafb8a1aaadcf6624a13b50f5d7bc72fd7e046927c32c5ea541e244.css" integrity="sha256-31PB7a2vuKGqrc9mJKE7UPXXvHL9fgRpJ8MsXqVB4kQ=">
+      <link rel="stylesheet" href="/css/add-on.css">
+    
+  
+  
+  
+  
+</head>
+
+  <body>
+    
+<header id="site-header">
+  <nav id="site-nav">
+    <h1 class="nav-title">
+      <a href="/">
+        
+          
+            blog
+          
+        
+      </a>
+    </h1>
+    <menu id="site-nav-menu" class="flyout-menu">
+      
+        
+          
+          
+            <a href="/" class="link"><i class='fa fa-home'></i> 主页</a>
+          
+        
+      
+        
+          
+          
+            <a href="/about/" class="link"><i class='far fa-id-card'></i> 关于我</a>
+          
+        
+      
+        
+          
+          
+            <a href="/blog/" class="link"><i class='far fa-newspaper'></i> 日志</a>
+          
+        
+      
+        
+          
+          
+            <a href="/categories/" class="link"><i class='fas fa-sitemap'></i> 类别</a>
+          
+        
+      
+        
+          
+          
+            <a href="/tags/" class="link"><i class='fas fa-sitemap'></i> 标签</a>
+          
+        
+      
+        
+          
+          
+            <a href="/contact/" class="link"><i class='far fa-envelope'></i> 别来无恙</a>
+          
+        
+      
+      <a href="#share-menu" class="share-toggle"><i class="fas fa-share-alt">&nbsp;</i>Share</a>
+      
+
+    </menu>
+    
+
+    <a href="#share-menu" class="share-toggle"><i class="fas fa-share-alt fa-2x">&nbsp;</i></a>
+    <a href="#lang-menu" class="lang-toggle" lang="zh">zh</a>
+    <a href="#site-nav" class="nav-toggle"><i class="fas fa-bars fa-2x"></i></a>
+  </nav>
+  <menu id="lang-menu" class="flyout-menu">
+  <a href="#" lang="zh" class="link active">中文 (zh)</a>
+  
+    
+      
+        <a href="/en" lang="en" class="no-lang link">English (en)</a>
+      
+    
+      
+    
+  
+</menu>
+
+  
+    <menu id="share-menu" class="flyout-menu">
+      <h1>Share Post</h1>
+      
+
+
+
+
+  
+    
+    <a href="//twitter.com/share?text=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi&amp;url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" rel="noopener" class="share-btn twitter">
+        <i class="fab fa-twitter"></i><p>&nbsp;Twitter</p>
+      </a>
+  
+
+  
+      <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" rel="noopener" class="share-btn facebook">
+        <i class="fab fa-facebook"></i><p>&nbsp;Facebook</p>
+        </a>
+  
+
+  
+    <a href="//www.reddit.com/submit?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;title=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn reddit">
+          <i class="fab fa-reddit-alien"></i><p>&nbsp;Reddit</p>
+        </a>
+  
+
+  
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;title=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn linkedin">
+            <i class="fab fa-linkedin"></i><p>&nbsp;LinkedIn</p>
+          </a>
+  
+
+  
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;description=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn pinterest">
+          <i class="fab fa-pinterest-p"></i><p>&nbsp;Pinterest</p>
+        </a>
+  
+
+  
+        <a href="mailto:?subject=Check out this post by %7b%20%20%20%20%20%20%20%20map%5b%5d%7d&amp;body=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" class="share-btn email" data-proofer-ignore>
+          <i class="fas fa-envelope"></i><p>&nbsp;Email</p>
+        </a>
+  
+
+
+    </menu>
+  
+</header>
+
+    <div id="wrapper">
+      <section id="site-intro">
+  <a href="/"><img src="/img/main/logo.jpg" class="circle" width="" alt="Hugo Future Imperfect Slim" /></a>
+  <header>
+    <h1>陈sir</h1>
+  </header>
+  <main>
+    <p>因为技术能树点歪了而成为云计算架构师</p>
+  </main>
+  
+    <footer>
+      <ul class="socnet-icons">
+        
+
+        <li><a href="//github.com/yudar1024/yudar1024.github.io" target="_blank" rel="noopener" title="GitHub" class="fab fa-github"></a></li>
+
+
+
+
+
+
+<li><a href="//flickr.com/photos/example" target="_blank" rel="noopener" title="Flickr" class="fab fa-flickr"></a></li>
+
+
+
+
+<li><a href="//linkedin.com/in/example" target="_blank" rel="noopener" title="LinkedIn" class="fab fa-linkedin"></a></li>
+<li><a href="//linkedin.com/company/examplebusiness" target="_blank" rel="noopener" title="LinkedIn Company" class="fab fa-linkedin"></a></li>
+
+
+
+<li><a href="//facebook.com/example" target="_blank" rel="noopener" title="Facebook" class="fab fa-facebook"></a></li>
+<li><a href="//reddit.com/user/example" target="_blank" rel="noopener" title="Reddit" class="fab fa-reddit"></a></li>
+
+
+
+
+
+
+
+<li><a href="//instagram.com/example" target="_blank" rel="noopener" title="Instagram" class="fab fa-instagram"></a></li>
+
+<li><a href="//twitter.com/example" target="_blank" rel="noopener" title="Twitter" class="fab fa-twitter"></a></li>
+
+
+<li><a href="//pinterest.com/example" target="_blank" rel="noopener" title="Pinterest" class="fab fa-pinterest-p"></a></li>
+<li><a href="//telegram.me/example" target="_blank" rel="noopener" title="telegram" class="fab fa-telegram"></a></li>
+
+
+
+<li><a href="//researchgate.net/profile/example" target="_blank" rel="noopener" title="Research Gate"><i class="ai ai-researchgate"></i></a></li>
+<li><a href="//keybase.io/example" target="_blank" rel="noopener" title="keybase" class="fab fa-keybase"></a></li>
+<li><a href="//example.com/@example" target="_blank" rel="noopener" title="mastodon" class="fab fa-mastodon"></a></li>
+<li><a href="mailto:cen1024@163.com" target="_blank" title="Email" class="far fa-envelope"></a></li>
+
+      </ul>
+    </footer>
+  
+</section>
+
+      <main id="site-main">
+        <article class="post">
+  <header>
+  <div class="title">
+    
+        <h2><a href="/blog/deploy-glusterfs-hekti-in-k8s/">kubernetes 集群中部署 glusterfs 与 heketi</a></h2>
+    
+    
+        <p>deploy glusterfs and heketi in kubernetes</p>
+    
+</div>
+  <div class="meta">
+    <time class="published" datetime="0001-01-01 00:00:00 &#43;0000 UTC">
+      
+    </time>
+    <span class="author">陈 sir</span>
+    
+      <p></p>
+    
+  </div>
+</header>
+
+  <section id="socnet-share">
+    
+
+
+
+
+  
+    
+    <a href="//twitter.com/share?text=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi&amp;url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" rel="noopener" class="share-btn twitter">
+        <i class="fab fa-twitter"></i><p>&nbsp;Twitter</p>
+      </a>
+  
+
+  
+      <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" rel="noopener" class="share-btn facebook">
+        <i class="fab fa-facebook"></i><p>&nbsp;Facebook</p>
+        </a>
+  
+
+  
+    <a href="//www.reddit.com/submit?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;title=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn reddit">
+          <i class="fab fa-reddit-alien"></i><p>&nbsp;Reddit</p>
+        </a>
+  
+
+  
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;title=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn linkedin">
+            <i class="fab fa-linkedin"></i><p>&nbsp;LinkedIn</p>
+          </a>
+  
+
+  
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f&amp;description=kubernetes%20%e9%9b%86%e7%be%a4%e4%b8%ad%e9%83%a8%e7%bd%b2%20glusterfs%20%e4%b8%8e%20heketi" target="_blank" rel="noopener" class="share-btn pinterest">
+          <i class="fab fa-pinterest-p"></i><p>&nbsp;Pinterest</p>
+        </a>
+  
+
+  
+        <a href="mailto:?subject=Check out this post by %7b%20%20%20%20%20%20%20%20map%5b%5d%7d&amp;body=https%3a%2f%2fexample.com%2fblog%2fdeploy-glusterfs-hekti-in-k8s%2f" target="_blank" class="share-btn email" data-proofer-ignore>
+          <i class="fas fa-envelope"></i><p>&nbsp;Email</p>
+        </a>
+  
+
+
+  </section>
+  
+
+  <div class="content">
+    
+
+<h1 id="组件介绍">组件介绍</h1>
+
+<h2 id="heketi">Heketi</h2>
+
+<p>Heketi提供了一个RESTful管理界面，可以用来管理GlusterFS卷的生命周期。 通过Heketi，就可以像使用OpenStack Manila，Kubernetes和OpenShift一样申请可以动态配置GlusterFS卷。Heketi会动态在集群内选择bricks构建所需的volumes，这样以确保数据的副本会分散到集群不同的故障域内。同时Heketi还支持任意数量的ClusterFS集群，以保证接入的云服务器不局限于单个GlusterFS集群。</p>
+
+<h2 id="gluster-kubernetes">Gluster-Kubernetes</h2>
+
+<p><a href="https://github.com/gluster/gluster-kubernetes">Gluster-Kubernetes</a>是一个可以将GluserFS和Hekiti轻松部署到Kubernetes集群的开源项目。另外也提供在Kubernetes中可以采用StorageClass来动态管理GlusterFS卷。</p>
+
+<h2 id="部署环境">部署环境</h2>
+
+<p>服务器分配信息:</p>
+
+<p>| Hostname | 服务器IP | 存储IP | 硬盘信息 | 容量G |
+| &mdash;&mdash; | &mdash;&mdash; | &mdash;&mdash; | &mdash;&mdash; | &mdash;&mdash; |
+| master1 | 192.168.10.51 | 192.168.10.51 | /dev/sdb | 300G|
+| node1 | 192.168.10.52 | 192.168.10.52 | /dev/sdb | 300G|
+| node2 | 192.168.10.53 | 192.168.10.53 | /dev/sdb | 300G|</p>
+
+<h2 id="部署步骤">部署步骤</h2>
+
+<p>安装依赖组件 （master1 node1 node2）</p>
+
+<pre><code class="language-shell">yum install -y centos-release-gluster
+yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-rdma glusterfs-geo-replication glusterfs-devel
+systemctl start glusterd
+systemctl enable glusterd
+</code></pre>
+
+<p>内核模块加载 （master1 node1 node2）</p>
+
+<pre><code class="language-shell"># 加载 glusterfs 所需的内核模块
+touch /etc/sysconfig/modules/glusterfs.modules
+echo '#!/bin/bash' &gt;&gt; /etc/sysconfig/modules/glusterfs.modules
+echo &quot;modprobe -- dm_snapshot&quot; &gt;&gt; /etc/sysconfig/modules/glusterfs.modules
+echo &quot;modprobe -- dm_mirror&quot; &gt;&gt; /etc/sysconfig/modules/glusterfs.modules
+echo &quot;modprobe -- dm_thin_pool&quot; &gt;&gt; /etc/sysconfig/modules/glusterfs.modules
+# 授权
+chmod 755 /etc/sysconfig/modules/glusterfs.modules 
+
+# 加载模块
+bash /etc/sysconfig/modules/glusterfs.modules
+</code></pre>
+
+<p>校验模块加载</p>
+
+<pre><code class="language-shell">$lsmod |egrep &quot;dm_snapshot|dm_mirror|dm_thin_pool&quot;
+dm_thin_pool           66298  0 
+dm_persistent_data     75269  1 dm_thin_pool
+dm_bio_prison          18209  1 dm_thin_pool
+dm_snapshot            39104  0 
+dm_bufio               28014  2 dm_persistent_data,dm_snapshot
+dm_mirror              22289  0 
+dm_region_hash         20813  1 dm_mirror
+dm_log                 18411  2 dm_region_hash,dm_mirror
+dm_mod                123941  14 dm_log,dm_mirror,dm_bufio,dm_thin_pool,dm_snapshot
+</code></pre>
+
+<p>获取部署文件 （master1 ）</p>
+
+<pre><code class="language-shell">git clone https://github.com/gluster/gluster-kubernetes.git
+</code></pre>
+
+<p>修改配置文件 （master1 ）</p>
+
+<pre><code class="language-shell">cp gluster-kubernetes/deploy/topology.json.sample gluster-kubernetes/deploy/topology.json
+</code></pre>
+
+<p>将 topology.json 修改为如下内容，注意 manage 的值必须和kubectl get node 中的的名称一样。</p>
+
+<pre><code class="language-json">{
+  &quot;clusters&quot;: [
+    {
+      &quot;nodes&quot;: [
+        {
+          &quot;node&quot;: {
+            &quot;hostnames&quot;: {
+              &quot;manage&quot;: [
+                &quot;master1&quot;
+              ],
+              &quot;storage&quot;: [
+                &quot;192.168.10.50&quot;
+              ]
+            },
+            &quot;zone&quot;: 1
+          },
+          &quot;devices&quot;: [
+            &quot;/dev/sdb&quot;
+          ]
+        },
+        {
+          &quot;node&quot;: {
+            &quot;hostnames&quot;: {
+              &quot;manage&quot;: [
+                &quot;node1&quot;
+              ],
+              &quot;storage&quot;: [
+                &quot;192.168.10.51&quot;
+              ]
+            },
+            &quot;zone&quot;: 1
+          },
+          &quot;devices&quot;: [
+            &quot;/dev/sdb&quot;
+          ]
+        },
+        {
+          &quot;node&quot;: {
+            &quot;hostnames&quot;: {
+              &quot;manage&quot;: [
+                &quot;node2&quot;
+              ],
+              &quot;storage&quot;: [
+                &quot;192.168.10.52&quot;
+              ]
+            },
+            &quot;zone&quot;: 1
+          },
+          &quot;devices&quot;: [
+            &quot;/dev/sdb&quot;
+          ]
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+
+<p>修改daemonset 文件</p>
+
+<pre><code>---
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  name: glusterfs
+  labels:
+    glusterfs: daemonset
+  annotations:
+    description: GlusterFS DaemonSet
+    tags: glusterfs
+spec:
+  template:
+    metadata:
+      name: glusterfs
+      labels:
+        glusterfs: pod
+        glusterfs-node: pod
+    spec:
+      nodeSelector:
+        storagenode: glusterfs
+      hostNetwork: true
+      tolerations: #因为master 节点不能被调度，所以此处要添加容忍
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      containers:
+      - image: gluster/gluster-centos:latest
+        imagePullPolicy: IfNotPresent
+        name: glusterfs
+        ............
+</code></pre>
+
+<p>修改 heketi-deployment.yaml</p>
+
+<pre><code class="language-yaml">---
+kind: Service
+apiVersion: v1
+metadata:
+  name: heketi
+  labels:
+    glusterfs: heketi-service
+    heketi: service
+  annotations:
+    description: Exposes Heketi Service
+spec:
+  selector:
+    glusterfs: heketi-pod
+  ports:
+  - name: heketi
+    port: 8080
+    targetPort: 8080
+  type: NodePort # 添加nodeport 如果想用ingress，可以不用修改此文件，略过这一步
+</code></pre>
+
+<p>修改 gk-deploy 文件（官方bug），在文件中搜索 &ndash;show-all
+将</p>
+
+<pre><code class="language-shell">  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector=&quot;heketi&quot; | awk '{print $1}')
+</code></pre>
+
+<p>改为</p>
+
+<pre><code class="language-shell">if [[ &quot;${CLI}&quot; =~ ^kubectl ]]; then
+  heketi_pod=$(${CLI} get pod --no-headers --selector=&quot;heketi&quot; | awk '{print $1}')
+else 
+  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector=&quot;heketi&quot; | awk '{print $1}')
+fi
+
+</code></pre>
+
+<p>修改 heketi.json.template, 主要添加admin key 与 user key</p>
+
+<pre><code class="language-json">{
+	&quot;_port_comment&quot;: &quot;Heketi Server Port Number&quot;,
+	&quot;port&quot; : &quot;8080&quot;,
+
+	&quot;_use_auth&quot;: &quot;Enable JWT authorization. Please enable for deployment&quot;,
+	&quot;use_auth&quot; : false,
+
+	&quot;_jwt&quot; : &quot;Private keys for access&quot;,
+	&quot;jwt&quot; : {
+		&quot;_admin&quot; : &quot;Admin has access to all APIs&quot;,
+		&quot;admin&quot; : {
+			&quot;key&quot; : &quot;openstack&quot;
+		},
+		&quot;_user&quot; : &quot;User only has access to /volumes endpoint&quot;,
+		&quot;user&quot; : {
+			&quot;key&quot; : &quot;openstack&quot;
+		}
+	},
+
+	&quot;_glusterfs_comment&quot;: &quot;GlusterFS Configuration&quot;,
+	&quot;glusterfs&quot; : {
+
+		&quot;_executor_comment&quot;: &quot;Execute plugin. Possible choices: mock, kubernetes, ssh&quot;,
+		&quot;executor&quot; : &quot;${HEKETI_EXECUTOR}&quot;,
+
+		&quot;_db_comment&quot;: &quot;Database file name&quot;,
+		&quot;db&quot; : &quot;/var/lib/heketi/heketi.db&quot;,
+
+		&quot;kubeexec&quot; : {
+			&quot;rebalance_on_expansion&quot;: true
+		},
+
+		&quot;sshexec&quot; : {
+			&quot;rebalance_on_expansion&quot;: true,
+			&quot;keyfile&quot; : &quot;/etc/heketi/private_key&quot;,
+			&quot;port&quot; : &quot;${SSH_PORT}&quot;,
+			&quot;user&quot; : &quot;${SSH_USER}&quot;,
+			&quot;sudo&quot; : ${SSH_SUDO}
+		}
+	},
+
+	&quot;backup_db_to_kube_secret&quot;: false
+}
+</code></pre>
+
+<p>开始部署</p>
+
+<pre><code class="language-shell">./gk-deploy -g -n glusterfs -c kubectl --admin-key openstack --user-key openstack
+</code></pre>
+
+<h2 id="安装失败问题">安装失败问题</h2>
+
+<h3 id="裸磁盘创建-device-失败">裸磁盘创建 device 失败</h3>
+
+<p>解决方法</p>
+
+<p>1 先卸载安装</p>
+
+<pre><code class="language-shell">./gk-deploy -g --abort
+</code></pre>
+
+<p>2 清除 vg</p>
+
+<pre><code class="language-shell">[root@master1 deploy]# dmsetup ls
+vg_d2ebbc4fc88ce69037db2da2b0a533f7-brick_90a958336d0e5b54b6f5643487805938      (253:6)
+vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938-tpool   (253:4)
+vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938_tdata   (253:3)
+vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938_tmeta   (253:2)
+vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938 (253:5)
+# 注意顺序不能错，必须先brick 然后，不带任何字符的，然后 tpool ，tdata tmeta
+$dmsetup remove vg_d2ebbc4fc88ce69037db2da2b0a533f7-brick_90a958336d0e5b54b6f5643487805938
+
+$dmsetup remove vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938
+
+$dmsetup remove vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938-tpool
+
+$dmsetup remove vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938_tdata
+
+$dmsetup remove vg_d2ebbc4fc88ce69037db2da2b0a533f7-tp_90a958336d0e5b54b6f5643487805938_tmeta
+
+</code></pre>
+
+<p>3 删除 gluster 相关文件</p>
+
+<pre><code class="language-shell">rm -rf /var/lib/glusterd
+</code></pre>
+
+<p>4 重置裸盘</p>
+
+<pre><code class="language-shell">$dd if=/dev/zero of=/dev/sdb bs=1k count=1
+blockdev --rereadpt /dev/sdb
+</code></pre>
+
+<p>5 重启</p>
+
+  </div>
+  <footer>
+    <ul class="stats">
+  
+    
+    
+      <li class="categories">
+        <ul>
+          
+            
+            <li><a class="article-category-link" href="https://example.com/categories/kubernetes">kubernetes</a></li>
+          
+        </ul>
+      </li>
+    
+  
+  
+    
+    
+      <li class="tags">
+        <ul>
+          
+            
+            <li><a class="article-category-link" href="https://example.com/tags/kubernetes">kubernetes</a></li>
+          
+        </ul>
+      </li>
+    
+  
+</ul>
+
+  </footer>
+</article>
+
+
+<div class="pagination">
+  
+  
+</div>
+
+
+      </main>
+      <section id="site-sidebar">
+  
+    <section id="recent-posts">
+      <header>
+        <h1></h1>
+      </header>
+      
+      <article class="mini-post">
+        <section>
+          
+
+        </section>
+        <header>
+          <h1><a href="/blog/deploy-glusterfs-hekti-in-k8s/">kubernetes 集群中部署 glusterfs 与 heketi</a></h1>
+          <time class="published" datetime=""></time>
+        </header>
+      </article>
+      
+      
+    </section>
+  
+
+  
+    
+      <section id="categories">
+        <header>
+          <h1><a href="/categories"></a></h1>
+        </header>
+        <ul>
+          
+            
+          
+          
+          <li>
+            
+              <a href="/categories/kubernetes/">kubernetes<span class="count">1</span></a>
+            
+          
+          </li>
+        </ul>
+      </section>
+    
+  
+
+  <section id="mini-bio">
+    <header>
+      <h1></h1>
+    </header>
+    <p>test</p>
+    <footer>
+      <a href="/about" class="button"></a>
+    </footer>
+  </section>
+</section>
+
+      <footer id="site-footer">
+  
+      <ul class="socnet-icons">
+        
+
+        <li><a href="//github.com/yudar1024/yudar1024.github.io" target="_blank" rel="noopener" title="GitHub" class="fab fa-github"></a></li>
+
+
+
+
+
+
+<li><a href="//flickr.com/photos/example" target="_blank" rel="noopener" title="Flickr" class="fab fa-flickr"></a></li>
+
+
+
+
+<li><a href="//linkedin.com/in/example" target="_blank" rel="noopener" title="LinkedIn" class="fab fa-linkedin"></a></li>
+<li><a href="//linkedin.com/company/examplebusiness" target="_blank" rel="noopener" title="LinkedIn Company" class="fab fa-linkedin"></a></li>
+
+
+
+<li><a href="//facebook.com/example" target="_blank" rel="noopener" title="Facebook" class="fab fa-facebook"></a></li>
+<li><a href="//reddit.com/user/example" target="_blank" rel="noopener" title="Reddit" class="fab fa-reddit"></a></li>
+
+
+
+
+
+
+
+<li><a href="//instagram.com/example" target="_blank" rel="noopener" title="Instagram" class="fab fa-instagram"></a></li>
+
+<li><a href="//twitter.com/example" target="_blank" rel="noopener" title="Twitter" class="fab fa-twitter"></a></li>
+
+
+<li><a href="//pinterest.com/example" target="_blank" rel="noopener" title="Pinterest" class="fab fa-pinterest-p"></a></li>
+<li><a href="//telegram.me/example" target="_blank" rel="noopener" title="telegram" class="fab fa-telegram"></a></li>
+
+
+
+<li><a href="//researchgate.net/profile/example" target="_blank" rel="noopener" title="Research Gate"><i class="ai ai-researchgate"></i></a></li>
+<li><a href="//keybase.io/example" target="_blank" rel="noopener" title="keybase" class="fab fa-keybase"></a></li>
+<li><a href="//example.com/@example" target="_blank" rel="noopener" title="mastodon" class="fab fa-mastodon"></a></li>
+<li><a href="mailto:cen1024@163.com" target="_blank" title="Email" class="far fa-envelope"></a></li>
+
+      </ul>
+  
+  <p class="copyright">
+    
+      &copy; 1
+      
+        陈sir 的流水帐
+      
+    . <br>
+    
+  </p>
+</footer>
+<a id="back-to-top" href="#" class="fas fa-arrow-up fa-2x"></a>
+
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/html.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/css.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/js.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/toml.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+  <script src=/js/util.js></script>
+  <script src=/js/main.js></script>
+  <script src=/js/add-on.js></script>
+  
+
+<script src='/js/staticman.js'></script>
+  
+
+
+
+    </div>
+  </body>
+</html>

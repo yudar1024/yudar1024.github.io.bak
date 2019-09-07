@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blog on 陈sir 的流水帐</title>
+    <link>https://example.com/blog/</link>
+    <description>Recent content in Blog on 陈sir 的流水帐</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    
+	<atom:link href="https://example.com/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>kubernetes 集群中部署 glusterfs 与 heketi</title>
+      <link>https://example.com/blog/deploy-glusterfs-hekti-in-k8s/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/blog/deploy-glusterfs-hekti-in-k8s/</guid>
+      <description>组件介绍 Heketi Heketi提供了一个RESTful管理界面，可以用来管理GlusterFS卷的生命周期。 通过Heketi，就可以像使用OpenStack Manila，Kubernetes和OpenShift一样申请可以动态配置GlusterFS卷。Heketi会动态在集群内选择bricks构建所需的volumes，这样以确保数据的副本会分散到集群不同的故障域内。同时Heketi还支持任意数量的ClusterFS集群，以保证接入的云服务器不局限于单个GlusterFS集群。
+Gluster-Kubernetes Gluster-Kubernetes是一个可以将GluserFS和Hekiti轻松部署到Kubernetes集群的开源项目。另外也提供在Kubernetes中可以采用StorageClass来动态管理GlusterFS卷。
+部署环境 服务器分配信息:
+| Hostname | 服务器IP | 存储IP | 硬盘信息 | 容量G | | &amp;mdash;&amp;mdash; | &amp;mdash;&amp;mdash; | &amp;mdash;&amp;mdash; | &amp;mdash;&amp;mdash; | &amp;mdash;&amp;mdash; | | master1 | 192.168.10.51 | 192.168.10.51 | /dev/sdb | 300G| | node1 | 192.168.10.52 | 192.168.10.52 | /dev/sdb | 300G| | node2 | 192.168.10.53 | 192.168.10.53 | /dev/sdb | 300G|
+部署步骤 安装依赖组件 （master1 node1 node2）
+yum install -y centos-release-gluster yum install -y glusterfs glusterfs-server glusterfs-fuse glusterfs-rdma glusterfs-geo-replication glusterfs-devel systemctl start glusterd systemctl enable glusterd  内核模块加载 （master1 node1 node2）</description>
+    </item>
+    
+  </channel>
+</rss>

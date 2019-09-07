@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://example.com/about/</loc>
+    <priority>0</priority>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/about/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/about/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://example.com/blog/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/blog/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/blog/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://example.com/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://example.com/tags/kubernetes/</loc>
+  </url>
+  
+  <url>
+    <loc>https://example.com/categories/kubernetes/</loc>
+  </url>
+  
+  <url>
+    <loc>https://example.com/blog/deploy-glusterfs-hekti-in-k8s/</loc>
+  </url>
+  
+  <url>
+    <loc>https://example.com/tags/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/tags/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://example.com/contact/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/contact/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/contact/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://example.com/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://example.com/en/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://example.com/"
+                />
+  </url>
+  
+</urlset>
