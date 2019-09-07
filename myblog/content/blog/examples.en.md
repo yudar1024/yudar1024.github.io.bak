@@ -99,8 +99,8 @@ Strikethrough uses two tildes. ~~Scratch this.~~
 Or leave it empty and use the [link text itself].
 
 URLs and URLs in angle brackets will automatically get turned into links.
-http://www.example.com or <http://www.example.com> and sometimes
-example.com (but not on Github, for example).
+http://www.yudar1024.github.io or <http://www.yudar1024.github.io> and sometimes
+yudar1024.github.io (but not on Github, for example).
 
 Some text to show that the reference links can follow later.
 
@@ -122,8 +122,8 @@ Some text to show that the reference links can follow later.
 Or leave it empty and use the [link text itself].
 
 URLs and URLs in angle brackets will automatically get turned into links.
-http://www.example.com or <http://www.example.com> and sometimes
-example.com (but not on Github, for example).
+http://www.yudar1024.github.io or <http://www.yudar1024.github.io> and sometimes
+yudar1024.github.io (but not on Github, for example).
 
 Some text to show that the reference links can follow later.
 

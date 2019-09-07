@@ -1,4 +1,4 @@
-baseurl                 = "https://example.com/"
+baseurl                 = "https://yudar1024.github.io/"
 DefaultContentLanguage  = "zh"
 title                   = "陈 sir 的流水帐"
 theme                   = "hugo-future-imperfect-slim"
