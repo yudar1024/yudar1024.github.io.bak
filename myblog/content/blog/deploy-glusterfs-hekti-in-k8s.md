@@ -2,7 +2,7 @@
 author = "陈 sir"
 categories = ["kubernetes"]
 tags = ["kubernetes"]
-date = "2019-9-7"
+date = "2019-09-07"
 description = "deploy glusterfs and heketi in kubernetes"
 featured = ""
 featuredalt = ""
