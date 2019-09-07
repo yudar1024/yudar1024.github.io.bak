@@ -1,5 +1,5 @@
 baseurl                 = "https://yudar1024.github.io/"
-DefaultContentLanguage  = "zh"
+DefaultContentLanguage  = "zh-cn"
 title                   = "陈 sir 的流水帐"
 theme                   = "hugo-future-imperfect-slim"
 preserveTaxonomyNames   = true
@@ -72,9 +72,9 @@ disableLanguages        = [""]
       alt                 = "Hugo Future Imperfect Slim"
 
   [params.sidebar]
-    about               = "test"
+    about               = "时光记录"
     # Sets the number of recent posts to show in the sidebar. The default value is 5.
-    postAmount          = 5
+    postAmount          = 6
     # set to show or to hide categories in the sidebar
     categories          = true
     # Sets Categories to sort by number of posts instead of alphabetical
@@ -151,8 +151,8 @@ disableLanguages        = [""]
 
 [Languages]
   # Each language has its own menu.
-  [Languages.zh]
-    LanguageCode        = "zh"
+  [Languages.zh-cn]
+    LanguageCode        = "zh-cn"
     LanguageName        = "中文"
     title               = "陈sir 的流水帐"
     description         = "要有希望"
