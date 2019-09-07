@@ -3,131 +3,131 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://example.com/en/blog/</loc>
+    <loc>https://yudar1024.github.io/en/blog/</loc>
     <lastmod>2019-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="zh"
-                href="https://example.com/blog/"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/blog/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/en/blog/"
+                href="https://yudar1024.github.io/en/blog/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/en/categories/</loc>
+    <loc>https://yudar1024.github.io/en/categories/</loc>
     <lastmod>2019-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="zh"
-                href="https://example.com/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://example.com/en/categories/"
-                />
-  </url>
-  
-  <url>
-    <loc>https://example.com/en/</loc>
-    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://example.com/"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/en/"
+                href="https://yudar1024.github.io/en/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/en/categories/markdown/</loc>
-    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://example.com/en/tags/markdown/</loc>
-    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://example.com/en/blog/examples/</loc>
-    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://example.com/en/tags/</loc>
+    <loc>https://yudar1024.github.io/en/</loc>
     <lastmod>2019-01-01T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="zh"
-                href="https://example.com/tags/"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/en/tags/"
+                href="https://yudar1024.github.io/en/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/en/blog/creating-a-new-theme/</loc>
+    <loc>https://yudar1024.github.io/en/categories/markdown/</loc>
+    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yudar1024.github.io/en/tags/markdown/</loc>
+    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yudar1024.github.io/en/blog/examples/</loc>
+    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yudar1024.github.io/en/tags/</loc>
+    <lastmod>2019-01-01T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://yudar1024.github.io/en/tags/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://yudar1024.github.io/en/blog/creating-a-new-theme/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/en/categories/hugo/</loc>
+    <loc>https://yudar1024.github.io/en/categories/hugo/</loc>
     <lastmod>2014-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/en/about/</loc>
+    <loc>https://yudar1024.github.io/en/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
-                hreflang="zh"
-                href="https://example.com/about/"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/en/about/"
+                href="https://yudar1024.github.io/en/about/"
                 />
   </url>
   
   <url>
-    <loc>https://example.com/en/blog/goisforlovers/</loc>
+    <loc>https://yudar1024.github.io/en/blog/goisforlovers/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/en/blog/hugoisforlovers/</loc>
+    <loc>https://yudar1024.github.io/en/blog/hugoisforlovers/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/en/categories/go/</loc>
+    <loc>https://yudar1024.github.io/en/categories/go/</loc>
     <lastmod>2014-04-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/en/contact/</loc>
+    <loc>https://yudar1024.github.io/en/contact/</loc>
     <xhtml:link
                 rel="alternate"
-                hreflang="zh"
-                href="https://example.com/contact/"
+                hreflang="zh-cn"
+                href="https://yudar1024.github.io/contact/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://example.com/en/contact/"
+                href="https://yudar1024.github.io/en/contact/"
                 />
   </url>
   

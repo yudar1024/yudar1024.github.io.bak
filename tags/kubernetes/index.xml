@@ -2,20 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>kubernetes on 陈sir 的流水帐</title>
-    <link>https://example.com/tags/kubernetes/</link>
+    <link>https://yudar1024.github.io/tags/kubernetes/</link>
     <description>Recent content in kubernetes on 陈sir 的流水帐</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 07 Sep 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://example.com/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://yudar1024.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>kubernetes 集群中部署 glusterfs 与 heketi</title>
-      <link>https://example.com/blog/deploy-glusterfs-hekti-in-k8s/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <link>https://yudar1024.github.io/blog/deploy-glusterfs-hekti-in-k8s/</link>
+      <pubDate>Sat, 07 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://example.com/blog/deploy-glusterfs-hekti-in-k8s/</guid>
+      <guid>https://yudar1024.github.io/blog/deploy-glusterfs-hekti-in-k8s/</guid>
       <description>组件介绍 Heketi Heketi提供了一个RESTful管理界面，可以用来管理GlusterFS卷的生命周期。 通过Heketi，就可以像使用OpenStack Manila，Kubernetes和OpenShift一样申请可以动态配置GlusterFS卷。Heketi会动态在集群内选择bricks构建所需的volumes，这样以确保数据的副本会分散到集群不同的故障域内。同时Heketi还支持任意数量的ClusterFS集群，以保证接入的云服务器不局限于单个GlusterFS集群。
 Gluster-Kubernetes Gluster-Kubernetes是一个可以将GluserFS和Hekiti轻松部署到Kubernetes集群的开源项目。另外也提供在Kubernetes中可以采用StorageClass来动态管理GlusterFS卷。
 部署环境 服务器分配信息:
