@@ -68,7 +68,7 @@ dm_mirror              22289  0
 dm_region_hash         20813  1 dm_mirror
 dm_log                 18411  2 dm_region_hash,dm_mirror
 dm_mod                123941  14 dm_log,dm_mirror,dm_bufio,dm_thin_pool,dm_snapshot
-``` 
+```
 
 获取部署文件 （master1 ）
 ``` shell
@@ -262,6 +262,122 @@ fi
 ``` shell
 ./gk-deploy -g -n glusterfs -c kubectl --admin-key openstack --user-key openstack
 ```
+
+
+
+# 验证安装
+
+### 创建 storage class
+
+创建storageclass.yaml 
+
+``` yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: glusterfs-storage
+provisioner: kubernetes.io/glusterfs
+parameters:
+  resturl: HEKETI_URL
+  clusterid: CLUSTERID
+  restauthenabled: "true"
+  restuser: "admin" # 此处需要与heketi 实际配置匹配
+  # secretNamespace: "default"
+  # secretName: "heketi-secret"
+  #如果使用 secret 可以用如下命令新建对应的secret 
+  # kubectl create secret generic heketi-secret \
+  # --type="kubernetes.io/glusterfs" --from-literal=key='openstack' \
+  # --namespace=default
+  # 对应的yaml为 https://github.com/kubernetes/examples/blob/master/staging/persistent-volume-provisioning/glusterfs/glusterfs-secret.yaml
+  restuserkey: "openstack" # 此处需要与heketi 实际配置匹配
+  gidMin: "40000" #存储类的 GID 范围的最小值和最大值。此范围内的唯一值 （GID）将用于动态预配卷。这些是可选值。如果未指定，则卷将预配值介于 2000-2147483647 之间，该值分别默认为 gidMin 和 gidMax。
+  gidMax: "50000"
+  # volumetype: "replicate:3" #Replica volume
+  # volumetype: disperse:4:2  #Disperse/EC volume
+  # volumetype: none  #Distribute volume
+```
+
+
+
+然后应用
+
+``` shell
+kubectl apply -f storageclass.yaml
+```
+
+
+
+### 创建 PVC
+
+pvc.yaml
+
+``` yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: glusterfs-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: glusterfs-storage  #storage-class的名字
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+```
+
+
+
+应用
+
+``` shell
+kubectl apply -f pvc.yaml
+kubectl get pvc,pv
+```
+
+
+
+### 创建一个pod 使用pvc
+
+nginx-test.yaml
+
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+  labels:
+    name: nginx-test
+spec:
+  containers:
+  - name: nginx-test
+    image: nginx
+    ports:
+    - name: web
+      containerPort: 80
+    volumeMounts:
+    - name: gluster-vol1
+      mountPath: /usr/share/nginx/html
+  volumes:
+    - name: gluster-vol1
+      persistentVolumeClaim:
+        claimName: glusterfs-claim
+```
+
+``` shell
+kubectl apply -f nginx-test.yaml
+# 在nginx 中添加内容，然后访问
+kubectl exec -it nginx-test bash
+cd /usr/share/nginx/html
+echo "hellow gluster fs " >> index.html
+ls
+exit
+kubectl forward nginx-test 1880:80
+curl localhost:1880
+```
+
+
+
 
 
 ## 安装失败问题
