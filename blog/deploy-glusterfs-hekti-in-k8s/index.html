@@ -14,7 +14,7 @@
 
 <meta itemprop="datePublished" content="2019-09-07T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2019-09-07T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="560">
+<meta itemprop="wordCount" content="747">
 
 
 
@@ -261,7 +261,7 @@
     </time>
     <span class="author">陈 sir</span>
     
-      <p>3 分钟</p>
+      <p>4 分钟</p>
     
   </div>
 </header>
@@ -599,6 +599,103 @@ fi
 <p>开始部署</p>
 
 <pre><code class="language-shell">./gk-deploy -g -n glusterfs -c kubectl --admin-key openstack --user-key openstack
+</code></pre>
+
+<h1 id="验证安装">验证安装</h1>
+
+<h3 id="创建-storage-class">创建 storage class</h3>
+
+<p>创建storageclass.yaml</p>
+
+<pre><code class="language-yaml">apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: glusterfs-storage
+provisioner: kubernetes.io/glusterfs
+parameters:
+  resturl: HEKETI_URL
+  clusterid: CLUSTERID
+  restauthenabled: &quot;true&quot;
+  restuser: &quot;admin&quot; # 此处需要与heketi 实际配置匹配
+  # secretNamespace: &quot;default&quot;
+  # secretName: &quot;heketi-secret&quot;
+  #如果使用 secret 可以用如下命令新建对应的secret 
+  # kubectl create secret generic heketi-secret \
+  # --type=&quot;kubernetes.io/glusterfs&quot; --from-literal=key='openstack' \
+  # --namespace=default
+  # 对应的yaml为 https://github.com/kubernetes/examples/blob/master/staging/persistent-volume-provisioning/glusterfs/glusterfs-secret.yaml
+  restuserkey: &quot;openstack&quot; # 此处需要与heketi 实际配置匹配
+  gidMin: &quot;40000&quot; #存储类的 GID 范围的最小值和最大值。此范围内的唯一值 （GID）将用于动态预配卷。这些是可选值。如果未指定，则卷将预配值介于 2000-2147483647 之间，该值分别默认为 gidMin 和 gidMax。
+  gidMax: &quot;50000&quot;
+  # volumetype: &quot;replicate:3&quot; #Replica volume
+  # volumetype: disperse:4:2  #Disperse/EC volume
+  # volumetype: none  #Distribute volume
+</code></pre>
+
+<p>然后应用</p>
+
+<pre><code class="language-shell">kubectl apply -f storageclass.yaml
+</code></pre>
+
+<h3 id="创建-pvc">创建 PVC</h3>
+
+<p>pvc.yaml</p>
+
+<pre><code class="language-yaml">apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: glusterfs-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: glusterfs-storage  #storage-class的名字
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+</code></pre>
+
+<p>应用</p>
+
+<pre><code class="language-shell">kubectl apply -f pvc.yaml
+kubectl get pvc,pv
+</code></pre>
+
+<h3 id="创建一个pod-使用pvc">创建一个pod 使用pvc</h3>
+
+<p>nginx-test.yaml</p>
+
+<pre><code class="language-yaml">apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test
+  labels:
+    name: nginx-test
+spec:
+  containers:
+  - name: nginx-test
+    image: nginx
+    ports:
+    - name: web
+      containerPort: 80
+    volumeMounts:
+    - name: gluster-vol1
+      mountPath: /usr/share/nginx/html
+  volumes:
+    - name: gluster-vol1
+      persistentVolumeClaim:
+        claimName: glusterfs-claim
+</code></pre>
+
+<pre><code class="language-shell">kubectl apply -f nginx-test.yaml
+# 在nginx 中添加内容，然后访问
+kubectl exec -it nginx-test bash
+cd /usr/share/nginx/html
+echo &quot;hellow gluster fs &quot; &gt;&gt; index.html
+ls
+exit
+kubectl forward nginx-test 1880:80
+curl localhost:1880
 </code></pre>
 
 <h2 id="安装失败问题">安装失败问题</h2>
